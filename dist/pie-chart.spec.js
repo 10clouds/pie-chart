@@ -1,6 +1,6 @@
-/*! pie-chart - v1.0.0 - 2015-08-12
+/*! pie-chart - v1.0.0 - 2016-04-06
 * https://github.com/n3-charts/pie-chart
-* Copyright (c) 2015 n3-charts  Licensed ,  */
+* Copyright (c) 2016 n3-charts  Licensed ,  */
 'use strict';
 
 /*global window */

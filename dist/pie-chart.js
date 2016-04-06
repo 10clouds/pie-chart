@@ -1,6 +1,6 @@
-/*! pie-chart - v1.0.0 - 2015-08-12
+/*! pie-chart - v1.0.0 - 2016-04-06
 * https://github.com/n3-charts/pie-chart
-* Copyright (c) 2015 n3-charts  Licensed ,  */
+* Copyright (c) 2016 n3-charts  Licensed ,  */
 (function() {
     'use strict';
 
@@ -27,6 +27,10 @@
         var svg;
         var promise;
 
+        var interval = null;
+        var gaugeScale = 100;
+        var currentData;
+
         var updateDimensions = function(dimensions) {
           dimensions.width = element[0].parentElement.offsetWidth || 900;
           dimensions.height = element[0].parentElement.offsetHeight || 500;
@@ -36,6 +40,26 @@
           $utils
             .updatePaths(svg, data, dim, options)
             .updateLegend(svg, data, dim, options);
+
+          currentData = [];
+
+          angular.copy(data, currentData);
+          currentData[0].finalVal = currentData[0].value;
+          currentData[0].value = 0;
+
+          if (interval) {
+            clearInterval(interval);
+          }
+
+          var interval = setInterval(function() {
+            if (currentData[0].finalVal === currentData[0].value) {
+              clearInterval(interval);
+              return
+            }
+            currentData[0].value++;
+            $utils.updateLegend(svg, currentData, dim, options);
+
+          }, (options.duration / gaugeScale));
         };
 
         var forceUpdate = function(data, options) {
@@ -150,7 +174,7 @@ updatePaths: function(svg, data, dimensions, options) {
 
   paths
     .transition()
-      .duration(250)
+      .duration(options.duration)
       .attrTween("d", tween)
       .each("end", function(d) {
         this.__current = {startAngle: d.startAngle, endAngle: d.endAngle};
@@ -178,7 +202,8 @@ getTools: function(dimensions, options) {
   }
 
   return {pie: pieLayout, arc: arc};
-},
+}
+,
 
 addLegend: function(svg) {
   var items = svg.append("g")
@@ -344,7 +369,8 @@ getLegendLabel: function(label, value, totalLength) {
   value.split("").forEach(function(c, i) {dots[totalLength - value.length + i] = c;});
 
   return dots.join("");
-},
+}
+,
 
 increase_brightness: function (hex, percent) {
   hex = hex.replace(/^\s*#|\s*$/g, '');
@@ -451,12 +477,17 @@ sanitizeOptions: function(options) {
 },
 
 sanitizeGaugeOptions: function(options) {
-  if (options.total === undefined) {
+  options.total = parseInt(options.total);
+  if (!options.total) {
     options.total = 100;
-  } else {
-    options.total = parseInt(options.total);
+  }
+
+  options.duration = parseInt(options.duration);
+  if (!options.duration) {
+    options.duration = 1200;
   }
 }
+
 
   };
 }])
