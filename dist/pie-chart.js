@@ -393,7 +393,7 @@ addDataForGauge: function(data, options) {
   if (!options || options.mode !== "gauge" || data.length !== 1) {
     return data;
   }
-  
+
   data = data.concat();
 
   var colorComplement = "white";
@@ -419,7 +419,7 @@ clean: function(element) {
 
 bootstrap: function(element, dimensions) {
   d3.select(element).classed('chart', true);
-  
+
   var width = dimensions.width;
   var height = dimensions.height;
 
@@ -431,7 +431,7 @@ bootstrap: function(element, dimensions) {
       (dimensions.width*.5) + ',' +
       (dimensions.height*.5) + ')'
   );
-  
+
   return svg;
 },
 
@@ -447,17 +447,17 @@ looksLikeSameSeries: function(newData, oldData) {
   if (newData.length !== oldData.length) {
     return false;
   }
-  
+
   for (var i = 0; i < newData.length; i++) {
     if (oldData[i].label !== newData[i].label) {
       return false;
     }
-    
+
     if (oldData[i].color !== newData[i].color) {
       return false;
     }
   }
-  
+
   return true;
 },
 
