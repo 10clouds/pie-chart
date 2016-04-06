@@ -477,16 +477,14 @@ sanitizeOptions: function(options) {
 },
 
 sanitizeGaugeOptions: function(options) {
-  if (options.total === undefined) {
+  options.total = parseInt(options.total);
+  if (!options.total) {
     options.total = 100;
-  } else {
-    options.total = parseInt(options.total);
   }
 
-  if (options.duration === undefined) {
+  options.duration = parseInt(options.duration);
+  if (!options.duration) {
     options.duration = 1200;
-  } else {
-    options.duration = parseInt(options.duration);
   }
 }
 
